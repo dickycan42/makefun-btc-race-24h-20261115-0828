@@ -21,7 +21,7 @@ node main.ts
 BTC's 1-minute bars are mostly noise (median move 0 bps, stdev ~12 bps) while a full-size round trip costs ~43 bps on this pool, so most "moves" are not worth trading. This bot only enters when three independent trend readings agree that a real move is underway, then rides it with a trailing stop and lets a strong trend run to a take-profit. It stays in cash the rest of the time — which is what a long-only bot must do on a falling day.
 
 - **Entry** (flat only): fast EMA(12) above slow EMA(26), the 6-bar return above +60 bps (a sharp short-term push), AND the 60-bar return above 0 bps (the push is part of a sustained move, not a blip in a downtrend). Buys 100% of cash.
-- **Exit** (long only): the close falls 80 bps below the highest close since entry (trailing stop), or the position is worth 4% over its cost (take-profit), or the fast EMA falls back below the slow EMA (trend over). Sells the whole position.
+- **Exit** (long only): the close falls 50 bps below the highest close since entry (trailing stop), or the position is worth 3.5% over its cost (take-profit), or the fast EMA falls back below the slow EMA (trend over). Sells the whole position. The take-profit banks a strong rally (about 13x the ~26 bps round-trip cost) instead of waiting for 4% and giving the peak back to a pullback; the 50 bps trail keeps more of a rally than an 80 bps one while still giving the trade room to breathe (about 2x the round-trip cost).
 - **Cooldown**: after any exit the bot waits 10 bars before it may enter again, so a stop-out cannot be re-bought on the next bar of the same chop.
 
 ## Files
@@ -37,4 +37,4 @@ Every decision is a pure function of the bars the harness has sent. No clock, no
 
 ## Dev-window result
 
-Graded locally with the kit CLI (`grade-local`, process driver) on the published dev window (1,440 one-minute bars): net PnL **+US$21.27** on 6 trades (3 round-trips), which clears the dev gate (net PnL above 0 USDC).
+Graded locally with the kit CLI (`grade-local`, process driver) on the published dev window (1,440 one-minute bars): net PnL **+US$30.88** on 6 trades (3 round-trips), which clears the dev gate (net PnL above 0 USDC). At 2x fees the net PnL is still +US$28.41. The three round-trips: −US$3.26, −US$1.33, +US$35.47 (the last is the big V-rally, entered near its start and banked at the +3.5% take-profit).

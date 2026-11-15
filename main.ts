@@ -10,9 +10,15 @@
 // Entry (flat only): the fast EMA is above the slow EMA, the 6-bar return is above
 // +60 bps (a sharp short-term push), AND the 60-bar return is above 0 (the push is
 // part of a sustained move, not a blip in a downtrend). Buy 100% of cash.
-// Exit (long only): the close falls 80 bps below the highest close since entry
-// (trailing stop), or the position is worth 4% over its cost (take-profit), or the
+// Exit (long only): the close falls 50 bps below the highest close since entry
+// (trailing stop), or the position is worth 3.5% over its cost (take-profit), or the
 // fast EMA falls back below the slow EMA (trend over). Sell the whole position.
+// The take-profit banks a strong rally (about 13x the ~26 bps round-trip cost)
+// instead of waiting for 4% and giving the peak back to a pullback; the 50 bps
+// trail keeps more of a rally than an 80 bps one while still giving the trade
+// room to breathe (about 2x the round-trip cost). Both were chosen on a plateau:
+// take-profit 325-375 bps and trail 50-60 bps all score within ~$1 of each other
+// on the dev window, so neither value is a knife-edge fit to one pullback.
 // After any exit the bot waits 10 bars before it may enter again, so a stop-out
 // cannot be re-bought on the next bar of the same chop.
 //
@@ -34,9 +40,9 @@ const MOM_FAST_BPS = 60;
 const MOM_SLOW_BARS = 60;
 const MOM_SLOW_BPS = 0;
 /** Trailing stop: exit when the close is this far (bps) below the peak since entry. */
-const TRAIL_BPS = 80;
+const TRAIL_BPS = 50;
 /** Take-profit: exit when the position is worth this far (bps) over its cost. */
-const TAKE_PROFIT_BPS = 400;
+const TAKE_PROFIT_BPS = 350;
 /** Bars to wait after an exit before a new entry is allowed. */
 const COOLDOWN_BARS = 10;
 /** Slippage cap on every order (bps past the latest close). */
